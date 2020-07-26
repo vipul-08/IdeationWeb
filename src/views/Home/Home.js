@@ -28,7 +28,6 @@ class Home extends React.PureComponent {
         let myusers = [];
         firebaseApp.database().ref().child("sales_promoter").once('value').then((snapshot) => {
            const data = snapshot.val();
-           console.log(data);
            for ( let key in data ) {
                const user = data[key];
                user.uid = key;
@@ -92,7 +91,7 @@ class Home extends React.PureComponent {
         for (let city in data) {
             for (let product in data[city]) {
                 for (let uid in data[city][product]) {
-                    if (!product in productData) {
+                    if (!(product in productData)) {
                         productData[product] = 0;
                     }
                     productData[product] = data[city][product][uid] + productData[product];
@@ -103,7 +102,20 @@ class Home extends React.PureComponent {
         for (let key in productData) {
             finalProductData = [...finalProductData, [key,productData[key]]]
         }
-        return finalProductData;
+        return (
+            <Chart
+                width={'500px'}
+                height={'500px'}
+                chartType="PieChart"
+                loader={<div>Loading Chart</div>}
+                data={finalProductData}
+                options={{
+                    title: 'Per product sales',
+                    subtitle: 'Revenue in cities',
+                }}
+                rootProps={{ 'data-testid': '1' }}
+            />
+        );
     }
 
     getData = (cityFilter=null, productFilter=null) => {
@@ -190,7 +202,6 @@ class Home extends React.PureComponent {
                     <th>Amount Earned</th>
                 </tr>
                 {fancyData.map((fd) => (
-                    console.log(fd) ||
                     <tr>
                         <td>
                             {this.state.users.find((u) => u.uid === fd.uid).name}
@@ -225,7 +236,12 @@ class Home extends React.PureComponent {
                 <div id="performance-table">
                     {this.getData(this.state.cityFilter,this.state.productFilter)}
                 </div>
-                {this.state.data && this.getBarChartData()}
+                <hr style={{ marginTop: '50px'}} />
+                <h1>Graphical Representations</h1>
+                <div style={{ marginTop: '50px'}}>
+                    <div style={{ float: 'left'}}>{this.state.data && this.getBarChartData()}</div>
+                    <div style={{ float: 'left'}}>{this.state.data && this.getPieChartData()}</div>
+                </div>
             </div>
         );
     }

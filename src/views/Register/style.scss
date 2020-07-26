@@ -1,0 +1,24 @@
+$primary-color: #0069D9;
+@import '~loaders.css/src/animations/ball-pulse-sync.scss';
+
+.loader-hidden {
+  display: none;
+}
+.loader-active {
+  display: block;
+  color: black;
+}
+
+.form-group {
+  width: 50%;
+  margin: 30px auto auto;
+}
+
+.hidden {
+  display: none;
+}
+
+.form-check-label {
+  color: black !important;
+}
+
